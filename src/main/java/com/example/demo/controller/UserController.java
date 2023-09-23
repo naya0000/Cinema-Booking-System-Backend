@@ -19,7 +19,9 @@ import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.payload.JWTAuthResponse;
 import com.example.demo.payload.LoginDto;
+//import com.example.demo.payload.UserPasswordDTO;
 import com.example.demo.payload.UserRolesDTO;
+import com.example.demo.payload.UserStatusDTO;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.UserService;
@@ -54,12 +56,22 @@ public class UserController {
 //			// return ResponseEntity.ok("Login failed");
 //		}
 //	}
-
+//	@PutMapping("/password") 
+//	public ResponseEntity<User> updateUserPassword(@RequestBody UserPasswordDTO request) {
+//
+//		User user = userService.updateUserPassword(request.getId(),request.getPassword(),request.getNewPassword());
+//		if (user != null)
+//			return ResponseEntity.ok(user);
+//		else {
+//			return ResponseEntity.notFound().build(); // 404 Not Found
+//			// throw new NotFoundException("User with ID " + id + " not found");
+//		}
+//	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<User> update(@PathVariable Integer id, @RequestBody User request) {
+	@PutMapping("/{id}") 
+	public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User request) {
 
-		User user = userService.update(id, request);
+		User user = userService.updateUser(id, request);
 		if (user != null)
 			return ResponseEntity.ok(user);
 		else {
@@ -67,15 +79,25 @@ public class UserController {
 			// throw new NotFoundException("User with ID " + id + " not found");
 		}
 	}
-
+	@PutMapping("/status") 
+	public ResponseEntity<User> updateUserStatus(@RequestBody UserStatusDTO request) {
+		
+		User user = userService.updateUserStatus(request.getId(),request.getStatus());
+		if (user != null)
+			return ResponseEntity.ok(user);
+		else {
+			return ResponseEntity.notFound().build(); // 404 Not Found
+			// throw new NotFoundException("User with ID " + id + " not found");
+		}
+	}
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		userService.delete(id);
 		return ResponseEntity.noContent().build(); // 204 No Content
 	}
 	
-	@GetMapping("/id")
-	public ResponseEntity<User> getUserById(@RequestParam Integer id) {
+	@PostMapping("/id") // GET `${api}/users/id?id=${id}`
+	public ResponseEntity<User> getUserById(@RequestBody Integer id) {
 		User user = userService.getUserById(id);
 
 		if (user != null) {

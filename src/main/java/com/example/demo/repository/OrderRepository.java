@@ -7,5 +7,5 @@ import com.example.demo.model.CustomerOrder;
 
 @Repository
 public interface OrderRepository extends JpaRepository<CustomerOrder,Integer>{
-
+	
 }

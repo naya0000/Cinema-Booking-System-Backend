@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.demo.enums.CancelStatus;
+import com.example.demo.enums.OrderStatus;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.UserOrderMapper;
 
@@ -43,28 +44,28 @@ public class OrderController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private UserOrderMapper userOrderMapper; 
+	private UserOrderMapper userOrderMapper;
 //	@Autowired
 //	private MovieService movieService;
 
 	@PostMapping("/users/{user_id}/orders")
-	public ResponseEntity<String> createUserOrder(@PathVariable Integer user_id,
-			 @RequestBody OrderDto request) {
-		
+	public ResponseEntity<String> createUserOrder(@PathVariable Integer user_id, @RequestBody OrderDto request) {
+
 		User user = userService.getUserById(user_id);
-		System.out.println("request:"+request);
+		System.out.println("request:" + request);
 		if (user == null) {
-			return ResponseEntity.notFound().build();//404
+			return ResponseEntity.notFound().build();// 404
 		}
 		request.setUser(user);
-	
+
 		CustomerOrder order = orderService.createOrder(request);
 
 		if (order != null)
 			return ResponseEntity.ok("create order ok");// 200 created
 		else
-			return ResponseEntity.badRequest().body("Failed to create order");//400
+			return ResponseEntity.badRequest().body("Failed to create order");// 400
 	}
+
 //	@GetMapping("/users/{username}/orders")
 //	public ResponseEntity <List<CustomerOrder>> getUserOrders(@PathVariable String username) {
 //		
@@ -76,45 +77,45 @@ public class OrderController {
 //		return  ResponseEntity.ok(user.getOrders());
 //	}
 	@GetMapping("/users/{user_id}/orders")
-	public ResponseEntity <List<UserOrderDTO>> getUserOrders(@PathVariable Integer user_id) {
-		
+	public ResponseEntity<List<UserOrderDTO>> getUserOrders(@PathVariable Integer user_id) {
+
 		User user = userService.getUserById(user_id);
 
 		if (user == null) {
-			return ResponseEntity.notFound().build();//404
+			return ResponseEntity.notFound().build();// 404
 		}
-		
-		 List<CustomerOrder> userOrders = user.getOrders();
 
-		  // Map CustomerOrder entities to UserOrderDTOs
-	    List<UserOrderDTO> userOrderDTOs = userOrders.stream()
-	            .map(order -> userOrderMapper.updateUserOrderDTO(order, new UserOrderDTO()))
-	            .collect(Collectors.toList());
+		List<CustomerOrder> userOrders = user.getOrders();
 
-		return  ResponseEntity.ok(userOrderDTOs);
+		// Map CustomerOrder entities to UserOrderDTOs
+		List<UserOrderDTO> userOrderDTOs = userOrders.stream()
+				.map(order -> userOrderMapper.updateUserOrderDTO(order, new UserOrderDTO()))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(userOrderDTOs);
 
 	}
+
 	@PutMapping("/orders/{id}")
 	public ResponseEntity<CustomerOrder> updateOrder(@PathVariable Integer id, @RequestBody CustomerOrder request) {
 
 		CustomerOrder order = orderService.updateOrder(id, request);
 		if (order != null) {
 			return ResponseEntity.ok(order);
-		}
-		else {
+		} else {
 			return ResponseEntity.notFound().build(); // 404 Not Found
 		}
 	}
 
-	@DeleteMapping("/orders/{id}")//cancel order
-	public ResponseEntity <Void> deleteOrder(@PathVariable Integer id) {
+	@DeleteMapping("/orders/{id}") // cancel order
+	public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
 		boolean deleted = orderService.deleteOrder(id);
-		if(deleted){
+		if (deleted) {
 			return ResponseEntity.noContent().build(); // 204 No Content
 		}
 		return ResponseEntity.notFound().build(); // 404 Not Found
 	}
-	
+
 	@GetMapping("/orders/{id}")
 	public ResponseEntity<CustomerOrder> getOrderById(@PathVariable Integer id) {
 		CustomerOrder order = orderService.getOrderById(id);
@@ -126,22 +127,32 @@ public class OrderController {
 	}
 
 	@GetMapping("/orders")
-	public ResponseEntity<List<CustomerOrder>> getAllUsers() {
+	public ResponseEntity<List<UserOrderDTO>> getAllOrders() {
 
-		List<CustomerOrder> orders = orderService.getAllOrders();
+		List<UserOrderDTO> orders = orderService.getAllOrders();
 		return ResponseEntity.ok(orders);
 	}
-	
-	@PutMapping("/orders/status/{id}")
-	public ResponseEntity<String> updateOrderStatus(@PathVariable Integer id, @RequestBody CancelStatus canceled) {
 
-		CustomerOrder order = orderService.updateOrderStatus(id, canceled);
-		
+	@PutMapping("/orders/canceledStatus/{id}")
+	public ResponseEntity<String> updateCancelStatus(@PathVariable Integer id, @RequestBody CancelStatus canceled) {
+
+		CustomerOrder order = orderService.updateCancelStatus(id, canceled);
+
+		if (order != null)
+			return ResponseEntity.ok("update cancel status ok");
+		else {
+			return ResponseEntity.notFound().build(); // 404 Not Found
+		}
+	}
+	@PutMapping("/orders/status/{id}")
+	public ResponseEntity<String> updateOrderStatus(@PathVariable Integer id, @RequestBody OrderStatus status) {
+
+		CustomerOrder order = orderService.updateOrderStatus(id, status);
+
 		if (order != null)
 			return ResponseEntity.ok("update order status ok");
 		else {
 			return ResponseEntity.notFound().build(); // 404 Not Found
 		}
 	}
-	
 }

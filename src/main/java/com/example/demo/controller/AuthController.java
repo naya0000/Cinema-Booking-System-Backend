@@ -6,14 +6,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.exception.APIException;
+import com.example.demo.model.User;
 import com.example.demo.payload.JWTAuthResponse;
 import com.example.demo.payload.LoginDto;
 import com.example.demo.payload.RegisterDto;
+import com.example.demo.payload.ResetPasswordDTO;
 import com.example.demo.service.AuthService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,6 +42,15 @@ public class AuthController {
 
         return ResponseEntity.ok(jwtAuthResponse);
     }
+	@PutMapping("/password") //reset password
+	public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO request){
+        User user = authService.resetPassword(request);
+        if (user != null) {
+            return ResponseEntity.ok("Password reset successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Password reset failed");
+        }
+    }
 	
 //	@SecurityRequirement(name = "Bear Authentication")
 	@PostMapping("/logout") // Log Out Account
@@ -48,9 +61,15 @@ public class AuthController {
 	
 	 // Register REST API
     @PostMapping
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
-        String response = authService.register(registerDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto){
+        try {
+            User user = authService.register(registerDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+        }
     }
     
     

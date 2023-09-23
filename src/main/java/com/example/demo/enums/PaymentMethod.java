@@ -1,5 +1,5 @@
 package com.example.demo.enums;
 
 public enum PaymentMethod {
-	CREDIT_CARD, CASH, LINE_PAY
+	信用卡, 現金, LINE_PAY
 }

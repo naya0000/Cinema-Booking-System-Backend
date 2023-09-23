@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.demo.exception.APIException;
 import com.example.demo.model.CustomerOrder;
 import com.example.demo.model.Session;
 import com.example.demo.model.User;
@@ -44,20 +46,26 @@ public class SessionController {
 		return ResponseEntity.created(location).body(session);// 201 created
 	}
 	@PutMapping("/{id}")
-	public ResponseEntity<Session> updateSession(@PathVariable Integer id, @RequestBody Session request) {
-
-		Session session = sessionService.updateSession(id, request);
-		if (session != null)
-			return ResponseEntity.ok(session);
-		else {
-			return ResponseEntity.notFound().build(); // 404 Not Found
-			// throw new NotFoundException("User with ID " + id + " not found");
-		}
+	public ResponseEntity<?> updateSession(@PathVariable Integer id, @RequestBody MovieSessionDTO request) {
+		try {
+			Session session = sessionService.updateSession(id, request);
+			return ResponseEntity.status(HttpStatus.OK).body(session);// 200
+		}catch(APIException e) {
+			return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+		}catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+        }
 	}
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteSession(@PathVariable Integer id) {
-		sessionService.deleteSession(id);
-		return ResponseEntity.noContent().build(); // 204 No Content
+	public ResponseEntity<?> deleteSession(@PathVariable Integer id) {
+		try {
+			sessionService.deleteSession(id);
+			return ResponseEntity.noContent().build(); // 204 No Content
+		}catch(APIException e) {
+			return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+		}catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+        }
 	}
 	@GetMapping("/{id}")
 	public ResponseEntity<Session> getSessionById(@PathVariable Integer id) {

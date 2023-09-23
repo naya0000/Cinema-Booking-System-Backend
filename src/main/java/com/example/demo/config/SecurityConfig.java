@@ -21,9 +21,11 @@ import com.example.demo.security.JwtAuthenticationFilter;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 
+
+//@SecurityScheme(name = "Bear Authentication", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 @Configuration
-@SecurityScheme(name = "Bear Authentication", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
-public class SecurityConfig {
+@EnableWebSecurity
+public class SecurityConfig  {
 	private UserDetailsService userDetailsService;
 
 	private JwtAuthenticationEntryPoint authenticationEntryPoint;
@@ -48,7 +50,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf().disable()
 				.authorizeHttpRequests((authorize) -> authorize
@@ -63,7 +65,7 @@ public class SecurityConfig {
 //	              .requestMatchers("/swagger-ui/**").permitAll()
 //	              .requestMatchers("/v3/api-docs/**").permitAll()
 //	              .anyRequest().authenticated()
-                .anyRequest().permitAll() //.authenticated()); 
+                .anyRequest().permitAll() //.authenticated()
 				).exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

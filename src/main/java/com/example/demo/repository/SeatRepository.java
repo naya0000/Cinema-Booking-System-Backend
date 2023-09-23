@@ -18,11 +18,9 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
 	List<Seat> findAllByIdIn(List<Long> seatIds);
 
-//	@Query("SELECT s FROM Seat s " + 
-//	       "INNER JOIN Session se ON s.movie.id = se.movie.id " + // Assuming seatNumber is a common field
-//		   "INNER JOIN Movie m ON se.movie.id = m.id " + "WHERE m.id = :movieId AND se.id = :sessionId")
-	@Query("SELECT s FROM Seat s " +
-	           "WHERE s.session.movie.id = :movieId AND s.session.id = :sessionId")
+	@Query("SELECT s FROM Seat s " + "WHERE s.movie.id = :movieId AND s.session.id = :sessionId ORDER BY s.seatRow ASC,s.seatNumber ASC")
 	List<Seat> findSeatsByMovieIdAndSessionId(@Param("movieId") Integer movieId, @Param("sessionId") Integer sessionId);
 
+	List<Seat> findBySeatRowAndSeatNumberAndMovieIdAndSessionId(String seatRow, String seatNumber, Integer movieId,
+			Integer sessionId);
 }

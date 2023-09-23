@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.example.demo.enums.AccountStatus;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -21,6 +22,7 @@ public class User {
 	private String name;
 	private String username;
 	private String password;
+	private String phoneNumber;
 	// private String email;
 
 	@JsonManagedReference(value="user-order")
@@ -35,6 +37,9 @@ public class User {
 	)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 	private Set<Role> roles;
+	
+	@Enumerated(EnumType.STRING)
+	private AccountStatus status;
 	
 	
 	@Override

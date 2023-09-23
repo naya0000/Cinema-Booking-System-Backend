@@ -9,6 +9,7 @@ import java.util.Set;
 import jakarta.validation.constraints.Min;
 
 import com.example.demo.enums.CancelStatus;
+import com.example.demo.enums.OrderStatus;
 import com.example.demo.enums.PaymentMethod;
 import com.example.demo.enums.TicketCategory;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -28,9 +29,6 @@ public class CustomerOrder {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	
-//	@Min(value = 0, message = "Price should be greater or equal to 0.")
-//	private Float price;
 	
 	private String orderDate;
 	private Integer quantity;
@@ -72,6 +70,10 @@ public class CustomerOrder {
 	
 	@Enumerated(EnumType.STRING)
 	private CancelStatus canceled;
+	
+	@Enumerated(EnumType.STRING)
+	private OrderStatus status;
+	
 //	 @ManyToMany(fetch = FetchType.LAZY)
 //	 private List<Seat> seats;
 	
@@ -79,7 +81,6 @@ public class CustomerOrder {
     public String toString() {
         return "CustomerOrder{" +
                 "id=" + id +
-                //", price=" + price +
                 ", orderDate=" + orderDate +
                 ", quantity=" + quantity +
                 ", payment=" + payment +

@@ -1,5 +1,5 @@
 package com.example.demo.enums;
 
 public enum TicketCategory {
-	Regular_Ticket,Concession_Ticket
+	全票, 優待票
 }

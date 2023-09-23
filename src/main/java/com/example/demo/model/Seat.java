@@ -8,15 +8,18 @@ import jakarta.persistence.*;
 
 import lombok.Data;
 
+//@Table(uniqueConstraints = {
+//	    @UniqueConstraint(columnNames = {"seatRow", "seatNumber", "movie_id", "session_id"})
+//	})
 @Data
 @Entity
 public class Seat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	private String seatRow;
 	private String seatNumber;
-
+	
 	private int isAvailable;
 	
 	@JsonBackReference(value="movie-seat")
@@ -24,7 +27,6 @@ public class Seat {
 	@JoinColumn(name = "movie_id") // foreign key column in the Seat table
 	private Movie movie;
 	
-
 	@JsonBackReference(value="session-seat")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "session_id") // foreign key column in the Seat table
@@ -37,6 +39,7 @@ public class Seat {
     public String toString() {
         return "Seat {" +
                 " id= " + id +
+                " seatRow= "+seatRow+
                 " seatNumber= "+seatNumber+
                 " isAvailable= "+isAvailable+
                 '}';

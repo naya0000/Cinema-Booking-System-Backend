@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.example.demo.enums.AccountStatus;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
@@ -22,6 +23,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	
 	public User create(User request) {
 		return userRepository.save(request);
 	}
@@ -36,20 +38,40 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public User update(Integer id, User request) {
+	public User updateUser(Integer id, User request) {
 		User existingUser = getUserById(id);
 
 		if (existingUser != null) {
 			existingUser.setName(request.getName());
 			existingUser.setUsername(request.getUsername());
 			existingUser.setPassword(request.getPassword());
+			existingUser.setStatus(request.getStatus());
+			existingUser.setPhoneNumber(request.getPhoneNumber());
 //			existingUser.setEmail(request.getEmail());
 
 			return userRepository.save(existingUser);
 		}
 		return null;
 	}
+//	public User updateUserPassword(Integer id, String password,String newPassword) {
+//		User existingUser = getUserById(id);
+//		
+//		if (existingUser != null) {
+//			authService.
+//			existingUser.setStatus(status);
+//			return userRepository.save(existingUser);
+//		}
+//		return null;
+//	}
+	public User updateUserStatus(Integer id, AccountStatus status) {
+		User existingUser = getUserById(id);
 
+		if (existingUser != null) {
+			existingUser.setStatus(status);
+			return userRepository.save(existingUser);
+		}
+		return null;
+	}
 	public User getByUsername(String username) {
 		return userRepository.findByUsername(username).orElse(null);
 	}

@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.Session;
 import com.example.demo.payload.MovieSessionDTO;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 @Repository
 public interface SessionRepository extends JpaRepository<Session,Integer>{
 	
@@ -18,6 +19,10 @@ public interface SessionRepository extends JpaRepository<Session,Integer>{
 	Collection <Object[]> findTimeAndDateById(@Param("id") Integer id);
 	
 	//JPA Projections
-	@Query("SELECT new com.example.demo.payload.MovieSessionDTO (s.id, s.startTime, s.endTime,s.sessionDate,s.movie.id ) FROM Session s WHERE s.movie.id=:id")
+	@Query("SELECT new com.example.demo.payload.MovieSessionDTO (s.id, s.startTime, s.endTime,s.sessionDate,s.movie.id ) FROM Session s WHERE s.movie.id=:id ORDER BY s.sessionDate ASC, s.startTime ASC")
 	Collection <MovieSessionDTO> findByMovieId(@Param("id") Integer id);
+
+	Collection<Session>findByStartTimeAndSessionDateAndMovieId(LocalTime startTime, LocalDate sessionDate,Integer movieId);
+
+
 }

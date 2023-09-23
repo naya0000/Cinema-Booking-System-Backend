@@ -27,8 +27,9 @@ public interface UserOrderMapper {
 	@Mapping(target = "movie", ignore = true)
 	@Mapping(target = "sessionDate", ignore = true)
 	@Mapping(target = "startTime", ignore = true)
-	@Mapping(target = "user", ignore = true)
+	@Mapping(target = "username", ignore = true)
 	@Mapping(target = "seatsNumber", ignore = true)
+	@Mapping(target = "seatsRow", ignore = true)
 	UserOrderDTO updateUserOrderDTO(CustomerOrder order, @MappingTarget UserOrderDTO userOrderDTO);
 	
 //	@Mapping(target = "id", ignore = true)
@@ -44,15 +45,18 @@ public interface UserOrderMapper {
 		userOrderDTO.setMovie(order.getMovie() == null ? null : order.getMovie().getTitle());
 		userOrderDTO.setSessionDate(order.getSession() == null ? null : order.getSession().getSessionDate());
 		userOrderDTO.setStartTime(order.getSession() == null ? null : order.getSession().getStartTime());
-		userOrderDTO.setUser(order.getUser() == null ? null : order.getUser().getId());
+		userOrderDTO.setUsername(order.getUser() == null ? null : order.getUser().getUsername());
 		  // Convert the list of seats to a list of seat_id values
 	    List<String> seatsNumber = new ArrayList<>();
+	    List<String> seatsRow = new ArrayList<>();
 	    if (order.getSeats() != null) {
 	        for (Seat seat : order.getSeats()) {
 	        	seatsNumber.add(seat.getSeatNumber());
+	        	seatsRow.add(seat.getSeatRow());
 	        }
 	    }
 	    userOrderDTO.setSeatsNumber(seatsNumber);
+	    userOrderDTO.setSeatsRow(seatsRow);
 	}
 
 //	@AfterMapping

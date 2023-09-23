@@ -26,7 +26,10 @@ public class MovieService {
 			existingMovie.setTitle(request.getTitle());
 			existingMovie.setDescription(request.getDescription());
 			existingMovie.setReleaseDate(request.getReleaseDate());
-			
+			existingMovie.setGenre(request.getGenre());
+			existingMovie.setStatus(request.getStatus());
+			existingMovie.setLevel(request.getLevel());
+			existingMovie.setCoverUrl(request.getCoverUrl());
 			return movieRepository.save(existingMovie);
 		}
 		return null;
