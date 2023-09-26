@@ -5,10 +5,12 @@ import java.util.stream.Collectors;
 
 import com.example.demo.enums.CancelStatus;
 import com.example.demo.enums.OrderStatus;
+import com.example.demo.exception.APIException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.UserOrderMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,8 +28,10 @@ import com.example.demo.model.Movie;
 import com.example.demo.model.User;
 import com.example.demo.payload.OrderDto;
 import com.example.demo.payload.UserOrderDTO;
+import com.example.demo.payload.UserResponse;
 import com.example.demo.repository.MovieRepository;
 import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.UserService;
 
@@ -38,7 +42,8 @@ import jakarta.validation.Valid;
 @RestController
 @CrossOrigin(origins = "*")
 public class OrderController {
-
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private OrderService orderService;
 	@Autowired
@@ -51,7 +56,7 @@ public class OrderController {
 	@PostMapping("/users/{user_id}/orders")
 	public ResponseEntity<String> createUserOrder(@PathVariable Integer user_id, @RequestBody OrderDto request) {
 
-		User user = userService.getUserById(user_id);
+		User user = userRepository.findById(user_id).orElse(null);
 		System.out.println("request:" + request);
 		if (user == null) {
 			return ResponseEntity.notFound().build();// 404
@@ -79,7 +84,7 @@ public class OrderController {
 	@GetMapping("/users/{user_id}/orders")
 	public ResponseEntity<List<UserOrderDTO>> getUserOrders(@PathVariable Integer user_id) {
 
-		User user = userService.getUserById(user_id);
+		User user = userRepository.findById(user_id).orElse(null);
 
 		if (user == null) {
 			return ResponseEntity.notFound().build();// 404
@@ -108,12 +113,16 @@ public class OrderController {
 	}
 
 	@DeleteMapping("/orders/{id}") // cancel order
-	public ResponseEntity<Void> deleteOrder(@PathVariable Integer id) {
-		boolean deleted = orderService.deleteOrder(id);
-		if (deleted) {
-			return ResponseEntity.noContent().build(); // 204 No Content
+	public ResponseEntity<?> deleteOrder(@PathVariable Integer id) {
+		try {
+			orderService.deleteOrder(id);
+			return ResponseEntity.ok("刪除訂單成功");
+		}catch(APIException e) {
+			return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
 		}
-		return ResponseEntity.notFound().build(); // 404 Not Found
+	
 	}
 
 	@GetMapping("/orders/{id}")
@@ -135,7 +144,7 @@ public class OrderController {
 
 	@PutMapping("/orders/canceledStatus/{id}")
 	public ResponseEntity<String> updateCancelStatus(@PathVariable Integer id, @RequestBody CancelStatus canceled) {
-
+		
 		CustomerOrder order = orderService.updateCancelStatus(id, canceled);
 
 		if (order != null)

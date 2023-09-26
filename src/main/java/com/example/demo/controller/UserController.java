@@ -14,14 +14,19 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
+import com.example.demo.exception.APIException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.payload.JWTAuthResponse;
 import com.example.demo.payload.LoginDto;
+import com.example.demo.payload.UserResponse;
 //import com.example.demo.payload.UserPasswordDTO;
 import com.example.demo.payload.UserRolesDTO;
 import com.example.demo.payload.UserStatusDTO;
+import com.example.demo.payload.UserUpdateRequest;
+
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.UserService;
@@ -67,55 +72,89 @@ public class UserController {
 //			// throw new NotFoundException("User with ID " + id + " not found");
 //		}
 //	}
-	
-	@PutMapping("/{id}") 
-	public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User request) {
 
-		User user = userService.updateUser(id, request);
-		if (user != null)
-			return ResponseEntity.ok(user);
-		else {
-			return ResponseEntity.notFound().build(); // 404 Not Found
-			// throw new NotFoundException("User with ID " + id + " not found");
-		}
-	}
-	@PutMapping("/status") 
-	public ResponseEntity<User> updateUserStatus(@RequestBody UserStatusDTO request) {
+//	@PutMapping("/{id}") 
+//	public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User request) {
+//
+//		User user = userService.updateUser(id, request);
+//		if (user != null)
+//			return ResponseEntity.ok(user);
+//		else {
+//			return ResponseEntity.notFound().build(); // 404 Not Found
+//			// throw new NotFoundException("User with ID " + id + " not found");
+//		}
+//	}
+	@PutMapping("/id")
+	public ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest request) {
 		
-		User user = userService.updateUserStatus(request.getId(),request.getStatus());
+		try {
+			UserResponse response = userService.updateUser(request);
+			return ResponseEntity.ok(response);
+		} catch (APIException e) {
+			return ResponseEntity.notFound().build(); // 404 Not Found
+			// throw new NotFoundException("User with ID " + id + " not found");
+		} 
+	}
+
+//	@PutMapping("/status") 
+//	public ResponseEntity<User> updateUserStatus(@RequestBody UserStatusDTO request) {
+//		
+//		User user = userService.updateUserStatus(request.getId(),request.getStatus());
+//		if (user != null)
+//			return ResponseEntity.ok(user);
+//		else {
+//			return ResponseEntity.notFound().build(); // 404 Not Found
+//			// throw new NotFoundException("User with ID " + id + " not found");
+//		}
+//	}
+	@PutMapping("/status")
+	public ResponseEntity<User> updateUserStatus(@RequestBody UserStatusDTO request) {
+
+		User user = userService.updateUserStatus(request.getId(), request.isLocked());
 		if (user != null)
 			return ResponseEntity.ok(user);
 		else {
 			return ResponseEntity.notFound().build(); // 404 Not Found
-			// throw new NotFoundException("User with ID " + id + " not found");
 		}
 	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		userService.delete(id);
 		return ResponseEntity.noContent().build(); // 204 No Content
 	}
-	
 	@PostMapping("/id") // GET `${api}/users/id?id=${id}`
-	public ResponseEntity<User> getUserById(@RequestBody Integer id) {
-		User user = userService.getUserById(id);
-
-		if (user != null) {
-			return ResponseEntity.ok(user);
-		} else {
+	public ResponseEntity<?> getUserById(@RequestBody Integer id) {
+		try {
+			UserResponse response = userService.getUserById(id);
+			return ResponseEntity.ok(response);
+		} catch (APIException e) {
 			return ResponseEntity.notFound().build(); // 404 Not Found
+			// throw new NotFoundException("User with ID " + id + " not found");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
 		}
 	}
+//	@PostMapping("/id") // GET `${api}/users/id?id=${id}`
+//	public ResponseEntity<User> getUserById(@RequestBody Integer id) {
+//		User user = userService.getUserById(id);
+//
+//		if (user != null) {
+//			return ResponseEntity.ok(user);
+//		} else {
+//			return ResponseEntity.notFound().build(); // 404 Not Found
+//		}
+//	}
+
 	@GetMapping("/{username}")
-	public ResponseEntity <User> getByUsername(@PathVariable String username) {
-		 User user =  userService.getByUsername(username);
-		 if(user!=null)
-			 return ResponseEntity.ok(user);
-		 else
-			 return ResponseEntity.notFound().build(); // 404 Not Found
+	public ResponseEntity<User> getByUsername(@PathVariable String username) {
+		User user = userService.getByUsername(username);
+		if (user != null)
+			return ResponseEntity.ok(user);
+		else
+			return ResponseEntity.notFound().build(); // 404 Not Found
 	}
-	
-	
+
 //	@GetMapping("/{username}/roles")
 //	public ResponseEntity <UserRolesDTO> getRolesByUser(@PathVariable String username) {
 //		System.out.println("username: "+username);
@@ -124,16 +163,16 @@ public class UserController {
 //		 
 //		return ResponseEntity.ok(dto);
 //	}
-	
+
 	@GetMapping("/{username}/roles")
-	public ResponseEntity <Set<Role>> getRolesByUser(@PathVariable String username) {
-		System.out.println("username: "+username);
-		
-		Set<Role>roles =  userService.getUserRoles(username);
-		 
+	public ResponseEntity<Set<Role>> getRolesByUser(@PathVariable String username) {
+		System.out.println("username: " + username);
+
+		Set<Role> roles = userService.getUserRoles(username);
+
 		return ResponseEntity.ok(roles);
 	}
-	
+
 	@GetMapping
 	public ResponseEntity<List<User>> getAllUsers() {
 

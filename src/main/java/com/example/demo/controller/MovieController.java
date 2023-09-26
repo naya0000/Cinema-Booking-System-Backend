@@ -73,7 +73,8 @@ public class MovieController {
 		}
 	}
 	//@PreAuthorize("hasRole('USER')")
-	@SecurityRequirement(name = "Bear Authentication")
+	//@SecurityRequirement(name = "Bear Authentication")
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<Movie>> getAllMovies() {
 		List<Movie> movies = movieService.getAllMovies();

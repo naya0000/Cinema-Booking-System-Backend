@@ -22,8 +22,8 @@ import com.example.demo.service.RoleService;
 public class RoleController {
 	@Autowired
 	private RoleService roleService;
-	@Autowired
-	private UserService userService;
+//	@Autowired
+//	private UserService userService;
 	
 	
 	@GetMapping

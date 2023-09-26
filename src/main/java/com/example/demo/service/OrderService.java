@@ -7,10 +7,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.enums.CancelStatus;
 import com.example.demo.enums.OrderStatus;
+import com.example.demo.exception.APIException;
 import com.example.demo.mapper.UserOrderMapper;
 import com.example.demo.model.CustomerOrder;
 import com.example.demo.model.Role;
@@ -81,13 +83,12 @@ public class OrderService {
 		return null;
 	}
 
-	public boolean deleteOrder(Integer id) {
+	public void deleteOrder(Integer id) {
 		CustomerOrder existingOrder = orderRepository.findById(id).orElse(null);
-		if (existingOrder != null) {
-			orderRepository.deleteById(id);
-			return true;
+		if (existingOrder == null) {
+			throw new APIException(HttpStatus.NOT_FOUND, "找不到該訂單");
 		}
-		return false;
+			orderRepository.deleteById(id);
 	}
 
 	public CustomerOrder getOrderById(Integer id) {
@@ -105,12 +106,19 @@ public class OrderService {
 
 	public CustomerOrder updateCancelStatus(Integer id, CancelStatus canceled) {
 		CustomerOrder order = orderRepository.findById(id).orElse(null);
+		System.out.println("order:"+order);
 		order.setCanceled(canceled);
+		System.out.println("canceled:"+canceled);
+
 		List<Seat> seats = order.getSeats();
+		System.out.println("seats:"+seats);
+
 		List<Long> seatsId = new ArrayList<>();
+	
 		for (Seat seat : seats) {
 			seatsId.add(seat.getId());
 		}
+		System.out.println("seatsId:"+seatsId);
 		seatService.updateSeatsAvailable(seatsId, 1); // set the seats to available after user canceled the order
 		orderRepository.save(order);
 		return order;
