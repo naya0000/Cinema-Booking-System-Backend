@@ -64,7 +64,7 @@ public class AuthController {
 			return ResponseEntity.ok(response);
 		} catch (AuthenticationException authException) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body("登入失敗，請重新登入:" + authException.getMessage());
+					.body("登入失敗，請重新登入。"); //+ authException.getMessage()
 		} catch (APIException e) {
 			return ResponseEntity.status(e.getStatus()).body(e.getMessage());
 		} catch (Exception e) {

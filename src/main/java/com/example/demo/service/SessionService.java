@@ -4,6 +4,7 @@ import java.util.Collection;
 //import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 //import org.apache.commons.collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,17 +36,21 @@ public class SessionService {
 	@Autowired
 	private MovieSessionMapper movieSessionMapper;
 
-	public Session createSession(MovieSessionDTO request) {
+	public MovieSessionDTO createSession(MovieSessionDTO request) {
 		Session session = movieSessionMapper.updateSession(request, new Session(), movieRepository);
+		
 		Collection<Session> existingSession = sessionRepository.findByStartTimeAndSessionDateAndMovieId(
 				session.getStartTime(), session.getSessionDate(), session.getMovie().getId());
-		System.out.println("existingSession:" + existingSession.isEmpty());
-
+		Session sessionNew  =sessionRepository.save(session);
+//		System.out.println("existingSession:" + existingSession.isEmpty());
+		MovieSessionDTO response = new MovieSessionDTO(sessionNew.getId(), sessionNew.getStartTime(), sessionNew.getEndTime(), sessionNew.getSessionDate(), request.getMovieId());
+		
 		if (!existingSession.isEmpty()) {
 			throw new SessionAlreadyExistsException(session.getStartTime(), session.getSessionDate(),
 					session.getMovie().getId());
 		}
-		return sessionRepository.save(session);
+		
+		return response;
 	}
 
 	public Session updateSession(Integer id, MovieSessionDTO request) {
@@ -54,6 +59,7 @@ public class SessionService {
 		if (existingSession == null) {
 			throw new APIException(HttpStatus.NOT_FOUND, "找不到該場次");
 		}
+//		BeanUtils.copyProperties(request, existingSession);
 		existingSession.setStartTime(request.getStartTime());
 		existingSession.setEndTime(request.getEndTime());
 		existingSession.setSessionDate(request.getSessionDate());

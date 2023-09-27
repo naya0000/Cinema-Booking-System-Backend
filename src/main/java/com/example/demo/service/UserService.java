@@ -25,6 +25,9 @@ import com.example.demo.payload.UserUpdateRequest;
 
 import com.example.demo.repository.UserRepository;
 
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @Service
 public class UserService {
 	@Autowired
@@ -83,7 +86,10 @@ public class UserService {
 		response.setPassword(existingUser.getPassword());
 		return response;
 	}
-
+	public void deleteUser(Integer userId) {
+		log.info(userId);
+		userRepository.deleteById(userId);
+	}
 //	public User updateUserPassword(Integer id, String password,String newPassword) {
 //		User existingUser = getUserById(id);
 //		

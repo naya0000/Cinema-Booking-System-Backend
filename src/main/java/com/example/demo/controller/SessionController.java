@@ -37,9 +37,9 @@ public class SessionController {
 	private SessionService sessionService;
 
 	@PostMapping
-	public ResponseEntity<Session> createSession(@RequestBody MovieSessionDTO request) {
-		Session session = sessionService.createSession(request);
-
+	public ResponseEntity<MovieSessionDTO> createSession(@RequestBody MovieSessionDTO request) {
+		MovieSessionDTO session = sessionService.createSession(request);
+		
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(session.getId())
 				.toUri();
 

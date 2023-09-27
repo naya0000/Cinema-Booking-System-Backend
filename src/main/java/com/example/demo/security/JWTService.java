@@ -35,10 +35,6 @@ public class JWTService {
 	@Autowired
 	private UserService userService;
 
-//	public JWTService(AuthenticationManager authenticationManager) {
-//	    this.authenticationManager = authenticationManager;
-//	}
-
 	@Value("${app.jwt-secret}")
 	private String jwtSecret;
 
@@ -47,11 +43,6 @@ public class JWTService {
 
 	// generate JWT token
 	public String generateToken(LoginDto request) {
-//    		System.out.println("4");
-//    	  Authentication authentication =
-//                  new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-////    	  System.out.println("5");
-//    	  try {
 		Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername(),
 				request.getPassword());
 		authentication = authenticationManager.authenticate(authentication); // 驗證帳密，若錯誤 throw exception
@@ -60,7 +51,7 @@ public class JWTService {
 		if (request.getLoginType().equals(
 				userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElse(""))) {
 
-			System.out.println("userDetails:" + userDetails);
+//			System.out.println("userDetails:" + userDetails);
 			Date currentDate = new Date();
 			Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
 			Claims claims = Jwts.claims();
@@ -71,41 +62,15 @@ public class JWTService {
 					.collect(Collectors.toList()));
 			claims.put("userId", userService.getIdByUsername(userDetails.getUsername()));
 			claims.put("name", userService.getNameByUsername(userDetails.getUsername()));
-			System.out.println("userDetails:" + userDetails);
+//			System.out.println("userDetails:" + userDetails);
 			Key secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 
 			return Jwts.builder().setClaims(claims).signWith(secretKey).compact();
 
 		} else {
-			System.out.println("yo");
-			throw new APIException(HttpStatus.UNAUTHORIZED, "此帳號沒有權限，請重新登入。");
+			throw new APIException(HttpStatus.UNAUTHORIZED, "登入失敗，請重新登入。");
+			//throw new APIException(HttpStatus.UNAUTHORIZED, "此帳號沒有權限，請重新登入。");
 		}
-
-//    	  }catch(AuthenticationException e) {
-//    		  throw new APIException(HttpStatus.UNAUTHORIZED,e.getMessage());
-//    	  }catch (APIException e) {
-//    		  throw new APIException(e.getStatus(),e.getMessage());
-//    	   }
-
-//    	  System.out.println("6");
-//          UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//          System.out.println("userDetails:"+userDetails);
-//          Date currentDate = new Date();
-//          Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
-//          Claims claims = Jwts.claims();
-//          claims.put("username", userDetails.getUsername());
-//          claims.setExpiration(expireDate);
-//          claims.setIssuer("Movie Theater");
-//          claims.put("roles", userDetails.getAuthorities().stream()
-//        	        .map(GrantedAuthority::getAuthority)
-//        	        .collect(Collectors.toList()));
-//          
-//          Key secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
-//
-//          return Jwts.builder()
-//                  .setClaims(claims)
-//                  .signWith(secretKey)
-//                  .compact();
 	}
 
 	private Key key() {

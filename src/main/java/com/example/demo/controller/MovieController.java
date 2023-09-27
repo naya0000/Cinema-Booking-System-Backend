@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.demo.exception.APIException;
 import com.example.demo.model.Movie;
 import com.example.demo.model.Seat;
 import com.example.demo.model.User;
+import com.example.demo.payload.MovieStatusDTO;
 import com.example.demo.repository.MovieRepository;
 import com.example.demo.service.MovieService;
 
@@ -42,6 +45,18 @@ public class MovieController {
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(movie.getId())
 				.toUri();
 		return ResponseEntity.created(location).body(movie);// 201 created
+	}
+	@PostMapping("/updateStatus")
+	public ResponseEntity<?> updateMovieStatus(@RequestBody MovieStatusDTO request){
+		try {
+		Movie movie = movieService.updateMovieStatus(request);
+		return ResponseEntity.status(HttpStatus.OK).body(movie);
+		} catch (APIException e) {
+			return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+		}
+
 	}
 	@PutMapping("/{id}")
 	public ResponseEntity<Movie> updateMovie(@PathVariable Integer id, @RequestBody Movie request) {
@@ -104,7 +119,6 @@ public class MovieController {
 	@GetMapping("/search") // GET `/movies/search?query=${query}`
 	public ResponseEntity<Collection<Integer>> searchMovies(@RequestParam String query) {
 		Collection<Integer> movie= movieService.getMovieByquery(query);
-
 		if (movie != null) {
 			return ResponseEntity.ok(movie);
 		} else {

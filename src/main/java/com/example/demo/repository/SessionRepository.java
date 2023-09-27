@@ -19,10 +19,13 @@ public interface SessionRepository extends JpaRepository<Session,Integer>{
 	Collection <Object[]> findTimeAndDateById(@Param("id") Integer id);
 	
 	//JPA Projections
-	@Query("SELECT new com.example.demo.payload.MovieSessionDTO (s.id, s.startTime, s.endTime,s.sessionDate,s.movie.id ) FROM Session s WHERE s.movie.id=:id ORDER BY s.sessionDate ASC, s.startTime ASC")
+	@Query("SELECT new com.example.demo.payload.MovieSessionDTO (s.id, s.startTime, s.endTime,s.sessionDate,s.movie.id ) FROM Session s WHERE s.movie.id=:id ORDER BY s.sessionDate DESC, s.startTime DESC")
 	Collection <MovieSessionDTO> findByMovieId(@Param("id") Integer id);
 
 	Collection<Session>findByStartTimeAndSessionDateAndMovieId(LocalTime startTime, LocalDate sessionDate,Integer movieId);
-
+	
+//	@Query(value = "SELECT * FROM session ORDER BY session_date DESC, start_time DESC", nativeQuery = true)
+//	@Query("SELECT * FROM Session s ORDER BY s.sessionDate DESC, s.startTime DESC")
+//	List<Session>findAllBySessionDate();
 
 }

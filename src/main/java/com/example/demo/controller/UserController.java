@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.extern.log4j.Log4j2;
 
 import com.example.demo.exception.APIException;
 import com.example.demo.exception.NotFoundException;
@@ -31,6 +32,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.UserService;
 
+@Log4j2
 @CrossOrigin(origins = "*") // allow request from any different url (port)
 @RestController
 @RequestMapping("/users")
@@ -38,7 +40,18 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
+	@PostMapping("/delete") //delete user by Id
+	public ResponseEntity<?> deleteUser(@RequestBody Integer id){
+		try {
+			System.out.println(id);
+			log.error(id);
+			userService.deleteUser(id);
+			return ResponseEntity.ok("");
+		} catch (APIException e) {
+			return ResponseEntity.notFound().build(); // 404 Not Found
+			// throw new NotFoundException("User with ID " + id + " not found");
+		} 
+	}
 //	@PostMapping
 //	public ResponseEntity<User> create(@RequestBody User request) {
 //		User user = userService.create(request);
@@ -123,7 +136,7 @@ public class UserController {
 		userService.delete(id);
 		return ResponseEntity.noContent().build(); // 204 No Content
 	}
-	@PostMapping("/id") // GET `${api}/users/id?id=${id}`
+	@PostMapping("/id") 
 	public ResponseEntity<?> getUserById(@RequestBody Integer id) {
 		try {
 			UserResponse response = userService.getUserById(id);

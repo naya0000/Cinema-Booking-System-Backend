@@ -97,7 +97,7 @@ public class OrderService {
 
 	public List<UserOrderDTO> getAllOrders() {
 		// Map CustomerOrder entities to UserOrderDTOs
-		List<CustomerOrder> orders = orderRepository.findAll();
+		List<CustomerOrder> orders = orderRepository.findAllOrderedByOrderDate();
 		List<UserOrderDTO> userOrderDTOs = orders.stream()
 				.map(order -> userOrderMapper.updateUserOrderDTO(order, new UserOrderDTO()))
 				.collect(Collectors.toList());
