@@ -17,20 +17,20 @@ This backend repository contains the server-side code for the application using 
 
 ## Features
 ### User :
-- Browse a list of movies, view movie details and search for a movie.
-- User registration and login. (Using JWT token and Spring Security)
-- Book movie tickets and view booking history.
+- Browse movies, view movie details and search for a movie.
+- User signup and login. (Using JWT token and Spring Security)
+- Book movie tickets and view reservations.
 - Cancel orders.
 - Reset Password.
 
 ### Admin :
 - #### Movie management :
   - Add movies with specific sessions and seats.
-  - Edit Movies
-  - Delete Movies
+  - Edit Movies.
+  - Delete Movies.
 - #### Order management :
   - Filter all the orders with movie title, order date, user Id, total price, etc.
-  - Update Order Status such as cancel, confirm or complete the order.
+  - Cancel, confirm or complete the order.
 - #### User management :
   - Block user accounts.
   - Edit users information such as password, username and phone number.
@@ -41,20 +41,18 @@ This backend repository contains the server-side code for the application using 
 Before you begin, ensure you have met the following requirements:
 
 - Java installed on your machine.
-- A Frontend for the Cinema Booking System. (Please refer to `https://github.com/naya0000/MovieTheater__Frontend`
-- A movie_project.sql file imported and connected to the server.
+- A Frontend for the Cinema Booking System. (Please refer to `https://github.com/naya0000/Cinema-Booking-System-Frontend`
+- A movie_project.sql file connected to the server.
 
 ## Getting Started
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/naya0000/MovieTheater__Backend.git
+   git clone https://github.com/naya0000/Cinema-Booking-System-Backend.git
 2. Navigate to the project directory:
    ```bash
-   cd MovieTheater__Backend
+   cd Cinema-Booking-System-Backend
 3. Start the development server:
    ```bash
    press `run application`
