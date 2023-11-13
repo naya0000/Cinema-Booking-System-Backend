@@ -1,6 +1,6 @@
 # Cinema Booking System (Backend)
 
-The Cinema Booking System is a JAVA /MySQL-based seat and ticket reservation system allowing bookings in a few easy steps.  
+The Cinema Booking System is a React/ Java/ MySQL-based seat and ticket reservation system allowing bookings in a few easy steps.  
 
 It allows users to browse movies, book tickets, and manage their reservations. 
 
@@ -41,7 +41,7 @@ This backend repository contains the server-side code for the application using 
 Before you begin, ensure you have met the following requirements:
 
 - Java installed on your machine.
-- A Frontend for the Cinema Booking System. (Please refer to `https://github.com/naya0000/Cinema-Booking-System-Frontend`
+- A Frontend for the Cinema Booking System. (Please refer to `https://github.com/naya0000/Cinema-Booking-System-Frontend`)
 - A movie_project.sql file connected to the server.
 
 ## Getting Started
