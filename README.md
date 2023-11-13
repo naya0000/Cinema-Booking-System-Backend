@@ -2,7 +2,7 @@
 
 The Cinema Booking System is a web application that allows users to browse movies, book tickets, and manage their bookings. 
 
-At the same time, it allows admin to manage the users, movie lists, and orders. 
+At the same time, it allows admin to manage the users, movie lists, movie sessions, movie seats and client orders. 
 
 This backend repository contains the server-side code for the application using Java Spring.
 
@@ -12,11 +12,6 @@ This backend repository contains the server-side code for the application using 
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
-- [Available Scripts](#available-scripts)
-- [Deployment](#deployment)
-- [API Integration](#api-integration)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 ### User :
@@ -79,25 +74,26 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
           - `OrderController/`: Manage client orders.
           - `UserController/`: Manage clients.
           - `AuthController/`: User login, sign up and admin login by JWT token.
-        - `model`
-          - `Movie`
-          - `CustomerOrder`
-          - `User`
-          - `Role`
-          - `Seat`
-          - `Session`
-        - `service`
-          - `MovieService`
-          - `OrderService`
-          - `UserService`
-          - `RoleService`
-          - `SeatService`
-          - `SessionService`
-          - `AuthService`
         - `security`
-          - `JwtAuthenticationFilter`: Authenticate user authorities in `doFilterInternal`.
-          - `JWTService`: Generate and parse login token.
-          - `SpringUser`: Override `getAuthorities`, `getPassword`, ``
-          - `SpringUserService`
+          - `JwtAuthenticationFilter/`: Authenticate user authorities in `doFilterInternal`.
+          - `JWTService/`: Generate and parse login token.
+          - `SpringUser/`: Override `getAuthorities`, `getPassword`, ``
+          - `SpringUserService/`
+        - `model`
+          - `Movie/`
+          - `CustomerOrder/`
+          - `User/`
+          - `Role/`
+          - `Seat/`
+          - `Session/`
+        - `service`
+          - `MovieService/`
+          - `OrderService/`
+          - `UserService/`
+          - `RoleService/`
+          - `SeatService/`
+          - `SessionService/`
+          - `AuthService/`
+       
           
 
