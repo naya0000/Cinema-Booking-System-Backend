@@ -68,14 +68,36 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Project Structure
 
 - `src/`: Contains the source code for the application.
-  - `components/`: Reusable components used throughout the app.
-  - `pages/`: Top-level pages/routes of the application.
-    - `UserLogin/`: User login page
-    - `UserSignUp/`: User sign up for new account.
-    - `UserEdit/`: User edit account information.
-    - `UserEditPassword/`: User change password.
-    - `MovieListPage/`: List released and upcoming movies.
-    - ``
-  - `services/`: Services for making API requests.
-  - `utils/`: Utility functions and constants.
-- `public/`: Static assets and HTML template.
+  - `main/`
+    - `Java/`
+      - `com.example.demo/`
+        - `controller`
+          - `MovieController/`: Add, edit, delete and search for a movie.
+          - `RoleController/`: Two roles __ User and Admin
+          - `SeatController/`: Create, edit and delete seats for a movie session.
+          - `SessionController/`: Create, edit and delete movie sessions.
+          - `OrderController/`: Manage client orders.
+          - `UserController/`: Manage clients.
+          - `AuthController/`: User login, sign up and admin login by JWT token.
+        - `model`
+          - `Movie`
+          - `CustomerOrder`
+          - `User`
+          - `Role`
+          - `Seat`
+          - `Session`
+        - `service`
+          - `MovieService`
+          - `OrderService`
+          - `UserService`
+          - `RoleService`
+          - `SeatService`
+          - `SessionService`
+          - `AuthService`
+        - `security`
+          - `JwtAuthenticationFilter`: Authenticate user authorities in `doFilterInternal`.
+          - `JWTService`: Generate and parse login token.
+          - `SpringUser`: Override `getAuthorities`, `getPassword`, ``
+          - `SpringUserService`
+          
+
