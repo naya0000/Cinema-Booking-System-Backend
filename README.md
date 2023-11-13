@@ -1,8 +1,10 @@
 # Cinema Booking System (Backend)
 
-The Cinema Booking System is a web application that allows users to browse movies, book tickets, and manage their reservations. 
+The Cinema Booking System is a JAVA /MySQL-based seat and ticket reservation system allowing bookings in a few easy steps.  
 
-At the same time, it allows admin to manage members, movie lists, movie sessions, movie seats and client orders. 
+It allows users to browse movies, book tickets, and manage their reservations. 
+
+At the same time, it allows admin to manage users, movie details and customer orders. 
 
 This backend repository contains the server-side code for the application using Java Spring.
 
